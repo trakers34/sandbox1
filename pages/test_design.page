@@ -1,0 +1,50 @@
+<apex:page sidebar="false" docType="html-5.0" >
+	<c:importvisualstrap />
+	<apex:stylesheet value="{!$Resource.dashboard}"/>
+	<c:visualstrapblock >
+		<center>
+			<c:pageheader title="Bounced Back" icon="" subtitle=" of {!$User.FirstName} {!$User.LastName}"/>
+		</center>
+			<c:row >		
+				<c:column type="col-md-12">
+					<c:row >
+						<c:column type="col-md-offset-3 col-md-6 test">
+								<div class="awesome-google-border generic-card-div center-block" style="width: 300px;">
+									<h4 class="generic-div-header"><i class="fa fa-margin fa-heart"></i>BOUNCE SCORES</h4>
+									<!-- <h1>0 <span>Bạn chưa lưu công việc nào</span></h1> -->
+									<h1><span class="counter" id='show_1'></span><span class="normalise"></span></h1>
+								</div>
+						</c:column>		
+					</c:row>
+
+					<c:row >
+						<c:column type="col-md-5 col-md-offset-1 test">
+								<div class="awesome-google-border generic-card-div center-block">
+									<h4 class="generic-div-header"><i class="fa fa-margin fa-heart"></i>TOTAL BOUNCED CONTACTS 1 {!$User.FirstName}</h4>
+		                            <h1><span class="counter" id='show_21'></span></h1><br/>
+									<h4><span class="normalise" id='show_22'></span></h4>
+								</div>	
+						</c:column>
+						<c:column type="col-md-5  test">
+								<div class="awesome-google-border generic-card-div center-block">
+									<h4 class="generic-div-header"><i class="fa fa-margin fa-heart"></i>POTENTIAL REVENUE LOSS FROM BOUNCES 2</h4>
+									<h1><span class="counter" id='show_31'></span></h1><br/>
+								</div>		
+						</c:column>
+					</c:row>
+					<c:row >
+						<c:column type="col-md-5 col-md-offset-1 test">
+						</c:column>
+
+						<c:column type="col-md-5 col-md-offset-1 test">
+						</c:column>
+					</c:row>
+
+					<c:row >
+						<c:column type="col-md-offset-3 col-md-6 test">
+						</c:column>
+					</c:row>
+				</c:column>
+			</c:row>
+	</c:visualstrapblock>
+</apex:page>

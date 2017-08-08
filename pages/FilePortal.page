@@ -1,0 +1,77 @@
+<apex:page controller="filePortal_dataController" sidebar="false">
+<html>
+<head> 
+		<title>File Portal</title>
+    	<meta charset="utf-8"></meta>
+     	<apex:includeScript value="{!$Resource.jquery183}"/>
+    	<apex:stylesheet value="{!$Resource.visualtrap}"/>
+    	<apex:stylesheet value="{!$Resource.filePortal_css}"/>
+    	<apex:includeScript value="{!$Resource.bootstrap_min}"/>
+    	<apex:includeScript value="{!$Resource.filePortal_peerJs}"/>
+    	<apex:includeScript value="{!$Resource.filePortal_mainJs}"/>
+    	<apex:includeScript value="{!$Resource.filePortal_fileSaver}"/>
+    
+</head>
+<body class=" grey-bg" >
+	<div class="visualstrap">
+	<h1 style="text-align: center;"> Welcome in the file Portal</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <main class="l-content">
+                    <div class="user others" >
+                        
+                    </div>
+
+                    <div class="user you">
+                        
+                    </div>
+                </main>
+                <svg class="circles" viewBox="-0.5 -0.5 1140 700">
+                    <circle class="circle" cx="570" cy="570" r="30" stroke="rgba(160,160,160, 1)"></circle>
+                    <circle class="circle" cx="570" cy="570" r="100" stroke="rgba(160,160,160,.9)"></circle>
+                    <circle class="circle" cx="570" cy="570" r="200" stroke="rgba(160,160,160,.8)"></circle>
+                    <circle class="circle" cx="570" cy="570" r="300" stroke="rgba(160,160,160,.7)"></circle>
+                    <circle class="circle" cx="570" cy="570" r="400" stroke="rgba(160,160,160,.6)"></circle>
+                    <circle class="circle" cx="570" cy="570" r="500" stroke="rgba(160,160,160,.5)"></circle>
+                </svg>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+<script type="text/javascript">
+jQuery(document).ready(function($)
+{
+	 Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.filePortal_dataController.getUserList}',
+                   function(result, event){
+                       for(var i= 0; i< result.length; i++){
+                           app.userList[result[i].Id] = result[i].Name;
+                       }
+                   }
+				);
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.filePortal_dataController.getCurrentUser}',
+                   function(result, event){
+                       // First I add the user to the html page
+                        app.addCurrentUser(result[0].Id,result[0].Name,function(){
+                             app.init(function(){
+                                app.connection();
+                            });   
+                        });
+                    
+                        
+                    
+                        window.setInterval(function(){
+                            $.get('https://fileportal.herokuapp.com/listofpeers',function(e){
+                                app.checkUsers(e.userList);
+                            });
+                        }, 5000);
+                   }
+				);
+});
+
+</script>
+</html>
+</apex:page>

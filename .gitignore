@@ -1,0 +1,8 @@
+/config/*
+/*.sublime-*
+.idea/
+IlluminatedCloud/
+Salesforce/
+.DS_Store
+/debug/*
+*.iml

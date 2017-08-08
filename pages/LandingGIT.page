@@ -1,0 +1,195 @@
+<!--
+ - Created by guillaume.rebmann on 6/21/17.
+ -->
+
+<apex:page id="LandingGIT" controller="LandingGITController" docType="html-5.0">
+    <style type="text/css">
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup
+            displays in the center of the screen. First set the width. Then set
+            margin-left to negative half of what the width is. You can add
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            margin-left: -250px;
+            top:100px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+
+    </style>
+    <apex:form id="formId">
+    <apex:pageBlock id="Actions" rendered="{!mode == 'view'}">
+        <apex:pageBlockButtons >
+            <apex:commandButton action="{!createSchedule}" value="New Schedule"></apex:commandButton>
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection title="Configuration" columns="1" id="Configuration">
+
+
+            <apex:outputLabel >
+                <h3>Step 1</h3>
+            </apex:outputLabel>
+            <apex:outputPanel style="margin-left:30px;">
+                Oauth with Digital Deer server to communicate with your instance of salesforce <a href="http://boiling-shore-35292.herokuapp.com/oauth2/auth">OAuth</a> <br />
+            </apex:outputPanel>
+
+
+            <apex:outputLabel >
+                <h3>Step 2</h3>
+            </apex:outputLabel>
+            <apex:outputPanel style="margin-left:30px;">
+                Create at least one schedule to synchronize with GIT
+            </apex:outputPanel>
+
+
+
+
+        </apex:pageBlockSection>
+
+        <apex:pageBlockSection title="Schedules" columns="1" id="schedules" >
+            <apex:pageBlockTable value="{!schedules}" var="item">
+                <apex:column headerValue="Name" value="{!item.name}"></apex:column>
+                <apex:column headerValue="Type" value="{!item.type}"></apex:column>
+                <apex:column headerValue="Frequency" value="{!item.frequency}"></apex:column>
+                <apex:column headerValue="Active" value="{!item.active}"></apex:column>
+                <apex:column headerValue="Action(s)">
+                    <apex:commandButton value="Edit" action="{!edit}">
+                        <apex:param name="selectedItem" value="{!item.name}" assignTo="{!selectedItem}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Delete" action="{!remove}" >
+                        <apex:param name="selectedItem" value="{!item.name}" assignTo="{!selectedItem}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Activate" action="{!activate}" rendered="{!!item.active}">
+                        <apex:param name="selectedItem" value="{!item.name}" assignTo="{!selectedItem}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Deactivate" action="{!deactivate}" rendered="{!item.active}">
+                        <apex:param name="selectedItem" value="{!item.name}" assignTo="{!selectedItem}"/>
+                    </apex:commandButton>
+                    <apex:commandButton value="Reset" action="{!reset}" rendered="{!item.active}">
+                        <apex:param name="selectedItem" value="{!item.name}" assignTo="{!selectedItem}"/>
+                    </apex:commandButton>
+                </apex:column>
+
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+        <apex:pageBlock rendered="{!OR(mode == 'new', mode == 'edit') }">
+            <apex:pageMessages ></apex:pageMessages>
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}"    value="Save"></apex:commandButton>
+                <apex:commandButton action="{!cancel}"  value="Cancel"></apex:commandButton>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="New Synchronization" columns="2" id="newSync" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Name" for="new_name"></apex:outputLabel>
+                    <apex:input value="{!GitScheduleItem.name}" id="new_name" required="true" disabled="{! mode == 'edit'}"></apex:input>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Type" for="new_type"></apex:outputLabel>
+                    <apex:selectList id="new_type" value="{!GitScheduleItem.type}" size="1">
+                        <apex:selectOptions value="{!Types}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Frequency" for="new_frequency"></apex:outputLabel>
+                    <apex:selectList id="new_frequency" value="{!GitScheduleItem.frequency}" size="1">
+                        <apex:selectOptions value="{!Frequencies}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Active" for="new_active"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!GitScheduleItem.active}" id="new_active"></apex:inputCheckbox>
+                </apex:pageBlockSectionItem>
+
+
+
+
+                <!-- Code to FETCH -->
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Include Apex classes" for="new_apex"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!GitScheduleItem.IncludeApexClasses}" id="new_apex"></apex:inputCheckbox>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="GIT Username" for="new_gitUsername"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.GitUsername}" id="new_gitUsername"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Include Triggers" for="new_trigger"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!GitScheduleItem.IncludeTriggers}" id="new_trigger"></apex:inputCheckbox>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="GIT Email" for="new_gitEmail"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.GitEmail}" id="new_gitEmail"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Include VF pages" for="new_vfpages"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!GitScheduleItem.IncludeVisualForcePages}" id="new_vfpages"></apex:inputCheckbox>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="GIT Repository" for="new_gitRepository"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.GitRepository}" id="new_gitRepository"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Include Components" for="new_components"></apex:outputLabel>
+                    <apex:inputCheckbox value="{!GitScheduleItem.IncludeComponents}" id="new_components"></apex:inputCheckbox>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="GIT Path" for="new_gitPath"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.GitPath}" id="new_gitPath"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="GIT Branch" for="new_gitBranch"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.GitBranch}" id="new_gitBranch"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Git Token" for="new_gitToken"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.gitToken}" id="new_gitToken"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Namespace" for="new_namespace"></apex:outputLabel>
+                    <apex:inputText value="{!GitScheduleItem.namespace}" id="new_namespace"></apex:inputText>
+                </apex:pageBlockSectionItem>
+
+                <!-- END Code to FETCH -->
+
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <apex:outputPanel id="popup" >
+            <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopup}"/>
+            <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopup}">
+                {!messageToDisplay}
+                <br/><br/><br/>
+                <apex:commandButton value="Close" action="{!closePopup}" rerender="formId"/>
+            </apex:outputPanel>
+        </apex:outputPanel>
+
+
+    </apex:form>
+</apex:page>

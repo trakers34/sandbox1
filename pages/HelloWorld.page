@@ -1,0 +1,48 @@
+<apex:page controller="application1_dataController" sidebar="false"> 
+<html>
+<head>
+
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body class="">
+
+<!-- BEGIN CORE JS FRAMEWORK-->
+<apex:includeScript value="{!$Resource.jquery183}"/>
+<apex:includeScript value="{!$Resource.jqueryui110}"/>
+<apex:includeScript value="{!$Resource.bootstrap}"/>
+<apex:includeScript value="{!$Resource.breakpoint}"/>
+<apex:includeScript value="{!$Resource.jqueryunveil}"/>
+<apex:includeScript value="{!$Resource.jqueryblockui}"/>
+<apex:includeScript value="{!$Resource.jquerysidr}"/>
+<apex:includeScript value="{!$Resource.jqueryslimscroll}"/>
+<apex:includeScript value="{!$Resource.pace}"/>
+<apex:includeScript value="{!$Resource.jqueryanimatenumber}"/>
+<apex:includeScript value="{!$Resource.raphael}"/>
+<apex:includeScript value="{!$Resource.d3v2}"/>
+<apex:includeScript value="{!$Resource.rickshaw}"/>
+<apex:includeScript value="{!$Resource.jquerysparkline}"/>
+<apex:includeScript value="{!$Resource.polymaps}"/>
+<apex:includeScript value="{!$Resource.jqueryflot}"/>
+<apex:includeScript value="{!$Resource.jqueryflotresize}"/>
+<apex:includeScript value="{!$Resource.metrojs}"/>
+<apex:includeScript value="{!$Resource.core}"/>
+<apex:includeScript value="{!$Resource.dashboardv2}"/>
+
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $(".live-tile,.flip-list").liveTile();
+            
+             application1_dataController.loadContact(
+                   function(result, event){console.log(result);}
+);
+            
+        });
+</script>
+
+<!-- END CORE TEMPLATE JS -->
+</body>
+</html>
+
+</apex:page>
