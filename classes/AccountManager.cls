@@ -5,7 +5,7 @@ global with sharing class AccountManager {
         RestRequest request = RestContext.request;
 		String right = request.requestURI.split('/Accounts/')[1];
         String accountId = right.split('/')[0];
-        // hello
+        // hello the world
         
         return [SELECT Id,Name,(select id,name from contacts) FROM Account where Id =: accountId limit 1];
     }
