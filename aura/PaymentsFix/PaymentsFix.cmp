@@ -1,0 +1,128 @@
+<aura:component description="PaymentsFix" controller="PaymentsFixController">
+    <aura:attribute name="id" type="Id" />
+
+    <aura:attribute name="payments" type="Object[]"/>
+    <aura:attribute name="paymentPositions" type="Object[]"/>
+    <aura:attribute name="_payments" type="Payment__c[]"/>
+    <aura:attribute name="_paymentPositions" type="Payment_Position__c[]" />
+    <aura:attribute name="_paymentProcessed" type="Integer" default="1"/>
+    <aura:attribute name="_paymentPositionProcessed" type="Integer" default="0"/>
+    <aura:attribute name="autorun" type="Boolean" default="false"/>
+    <aura:handler name="init" action="{!c.handleInit}" value="{!this}"/>
+
+    <div class="slds-grid slds-wrap slds-grid--pull-padded" >
+        <div class="slds-col slds-p-horizontal--small slds-size--5-of-12">
+            <div class="slds-box slds-box--small slds-theme--shade slds-text-align--center">
+                <!--   PAYMENTS TABLE  -  DISPLAY -->
+                <h1>PAYMENTS</h1>
+                <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                    <thead>
+                    <tr class="slds-text-title--caps">
+                        <th scope="col">
+                            <div class="slds-truncate" title="Name">Name</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Date">Date</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Store">Store</div>
+                        </th>
+                        <th scope="col">
+                            <div class="slds-truncate" title="Status">Status</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.payments}" var="payment">
+                        <tr>
+                            <th scope="row" data-label="Payment Name">
+                                <div class="slds-truncate" title="{!payment.name}"><a href="javascript:void(0);">{!payment.name}</a></div>
+                            </th>
+                            <td data-label="Date">
+                                <div class="slds-truncate" title="{!payment.date}">{!payment.date}</div>
+                            </td>
+                            <td data-label="Store">
+                                <div class="slds-truncate" title="{!payment.store}">{!payment.store}</div>
+                            </td>
+                            <td data-label="Status">
+                                <div class="slds-truncate" title="{!payment.status}">{!payment.status}</div>
+                            </td>
+
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="slds-col slds-p-horizontal--small slds-size--7-of-12">
+            <div class="slds-box slds-box--small slds-theme--shade slds-text-align--center">
+                <!--   PAYMENT POSITIONS TABLE  -  DISPLAY -->
+                <h1>PAYMENT POSITIONS</h1>
+                <div class="slds-grid">
+                    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                        <thead>
+                        <tr class="slds-text-title--caps">
+                            <th scope="col">
+                                <div class="slds-truncate" title="Name">Name</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="# Paid"># Paid</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="# Positive"># Positive</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="# Negative"># Negative</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Positive">Positive</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="Negative">Negative</div>
+                            </th>
+                            <th scope="col">
+                                <div class="slds-truncate" title="St.">St.</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <aura:iteration items="{!v.paymentPositions}" var="paymentPosition">
+                            <tr>
+                                <th scope="row" data-label="Position Name">
+                                    <div class="slds-truncate" title="{!paymentPosition.name}"><a href="javascript:void(0);">{!paymentPosition.name}</a></div>
+                                </th>
+                                <td data-label="# Paid" style="vertical-align:middle;">
+                                    <div class="slds-truncate" title="">{!paymentPosition.paidUnits}</div>
+                                </td>
+                                <td data-label="# Positive" style="vertical-align:middle;">
+                                    <div class="slds-truncate" title="">{!paymentPosition.paidUnits + paymentPosition.negativeUnits}</div>
+                                </td>
+                                <td data-label="# Negative" style="vertical-align:middle;">
+                                    <div class="slds-truncate" title="">{!paymentPosition.negativeUnits}</div>
+                                </td>
+                                <td data-label="Positive" style="vertical-align:middle;">
+                                    <div class="" style="white-space: pre-wrap;" title="">{!paymentPosition.positiveCoupons}</div>
+                                </td>
+                                <td data-label="Negative" style="vertical-align:middle;">
+                                    <div class="slds-truncate" title="">{!paymentPosition.negativeCoupons}</div>
+                                </td>
+                                <td data-label="Status" style="vertical-align:middle;">
+                                    <div class="slds-truncate" title="">{!paymentPosition.status}</div>
+                                </td>
+
+                            </tr>
+                        </aura:iteration>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button style="float:left;" onclick="{!c.nextPayment}">Next Payment</button>
+    <button style="float:right;" onclick="{!c.nextPaymentPosition}">Next Payment Position</button>
+    <center>
+        <button onclick="{!c.startAutoRun}">Start</button>&nbsp;&nbsp;
+        <button onclick="{!c.stopAutoRun}">Stop</button>
+    </center>
+</aura:component>

@@ -1,0 +1,55 @@
+<!--
+ - Created by guillaume.rebmann on 2/6/17.
+ -->
+
+<aura:component description="StatusChange" controller="StatusChangeController">
+    <aura:attribute name="obj" type="SObject" ></aura:attribute>
+    <aura:attribute name="objectId" type="String" required="true"></aura:attribute>
+    <aura:attribute name="loading" type="Boolean" default="true"></aura:attribute>
+    <aura:attribute name="messages" type="Map"></aura:attribute>
+    <aura:attribute name="currentStatus" type="String"></aura:attribute>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+    <aura:if isTrue="{!v.loading}">
+        <ui:spinner aura:id="spinner"/>
+    </aura:if>
+    <aura:if isTrue="{!!v.loading}">
+        <div class="col-md-12">
+            <div class="{!'col-md-12 alert text-center alertlittle '+(v.currentStatus=='draft'?'alertWarning':(v.currentStatus=='In Review'?'alertReview':'alertSuccess'))}">
+            Status is <strong>{!v.currentStatus+'.'}</strong>{!(v.currentStatus=='draft' &amp;&amp; (v.messages.Errors.length > 0 || v.messages.Warnings.length > 0))?' Please complete the following actions before setting the variant to next state':''}.
+            </div>
+            <div class="col-md-8">
+                <div class="has-success">
+                    <aura:iteration items="{!v.messages.Success}" var="message" >
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color: #3c763d;"></span>
+                        <label class="control-label" for="inputSuccess2">{!message}</label>
+                    </aura:iteration>
+                </div>
+                <div class="has-error">
+                    <aura:iteration items="{!v.messages.Errors}" var="message" >
+                        <span class="glyphicon glyphicon-unchecked" aria-hidden="true" style="color: #a94442;"></span>
+                        <label class="control-label" for="inputSuccess2">{!message}</label>
+                        <br />
+                    </aura:iteration>
+                </div>
+
+            </div>
+
+            <div class="col-md-4 text-right">
+                <div class="btn-group" role="group">
+
+                    <input class="{!'btn '+(v.currentStatus == 'draft' ? ' btn-default disabled':(v.currentStatus == 'ready'?'disabled':'btn-danger disabled'))}"  onclick="{!c.changeStatus}" data-status="In Review" value="N" disabled="{!v.currentStatus=='In Review'?'':'disabled'}" type="button"/>
+
+                    <input class="{!'btn '+(v.currentStatus == 'draft' ? 'btn-warning disabled':(v.currentStatus == 'ready'?'btn-default':'btn-default'))}"     onclick="{!c.changeStatus}" data-status="draft" value="D" disabled="{!v.currentStatus=='draft'?'disabled':''}" type="button"/>
+
+                    <input class="{!'btn '+(v.currentStatus == 'draft' ? 'btn-default':(v.currentStatus == 'ready'?'btn-success disabled':'btn-default disabled'))}"     onclick="{!c.changeStatus}" data-status="ready" value="R" disabled="{!v.currentStatus=='draft'?'':'disabled'}" type="button"/>
+
+                </div>
+            </div>
+
+
+        </div>
+    </aura:if>
+
+</aura:component>

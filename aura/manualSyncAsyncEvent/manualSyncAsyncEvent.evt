@@ -1,0 +1,7 @@
+<!--
+ - Created by guillaume.rebmann on 2/10/17.
+ -->
+
+<aura:event type="COMPONENT" description="manualSyncAsyncEvent">
+    <aura:attribute name="position" type="Integer"/>
+</aura:event>
