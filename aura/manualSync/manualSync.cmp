@@ -1,0 +1,89 @@
+<!--
+ - Created by guillaume.rebmann on 2/10/17.
+ -->
+
+<aura:component description="manualSync" controller="manualSyncController">
+    <ltng:require scripts="
+            /resource/momentJs"/>
+
+    <aura:attribute name="objectId" type="Id"/>
+
+    <aura:attribute name="isRunning" type="Boolean" default="false"/>
+    <aura:attribute name="message"  type="String" default="Success"/>
+    <aura:attribute name="total"    type="Integer"  default="0"/>
+    <aura:attribute name="totalToDisplay"    type="String"  />
+    <aura:attribute name="value"    type="Integer"  default="0"/>
+    <aura:attribute name="current"  type="Object"   default=""/>
+
+    <aura:attribute name="progressStatus"        type="Integer"/>
+    <aura:attribute name="progressStatusStep"    type="Integer" default="25"/>
+
+    <aura:attribute name="progressData"          type="Object[]" />
+
+    <aura:registerEvent name="manualSyncAsyncEvent" type="c:manualSyncAsyncEvent"/>
+
+    <aura:handler name="manualSyncAsyncEvent" action="{!c.sendNext}" event="c.manualSyncAsyncEvent"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{!!v.isRunning}">
+        <div class="slds-grid slds-wrap slds-grid--pull-padded slds-align--absolute-center">
+            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-1 slds-large-size--2-of-12">
+                <button type="button" class="btn btn-primary btn-block" id="sendAllMedia" onclick="{!c.sendMedia}" data-test="0">Send all medias</button>
+            </div>
+            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-1 slds-large-size--2-of-12">
+                <button type="button" class="btn btn-primary btn-block" id="sendAllToMh" onclick="{!c.sendAll}" data-test="0">Send all to MH</button>
+            </div>
+        </div>
+    </aura:if>
+
+    <!-- Progress Indicator START -->
+    <aura:if isTrue="{!v.isRunning}">
+        <div class="slds-progress">
+            <ol class="slds-progress__list">
+                <aura:iteration items="{!v.progressData}" var="status">
+                    <li class="{!'slds-progress__item '+(status.status=='completed'?'slds-is-completed':(status.status=='active'?'slds-is-active':''))}">
+                        <button class="slds-button slds-progress__marker" aria-describedby="step-1-tooltip" disabled="disabled">
+                            <span class="slds-assistive-text">{!status.name}</span>
+                        </button>
+                    </li>
+                </aura:iteration>
+            </ol>
+            <div class="slds-progress-bar">
+            <span class="slds-progress-bar__value" style="{!'width:'+v.progressStatus+'%;'}">
+              <span class="slds-assistive-text">{!'Progress: '+v.progressStatus+'%'}</span>
+            </span>
+            </div>
+        </div>
+        <!-- Progress Indicator END -->
+
+        <div class="slds-grid slds-wrap slds-grid--pull-padded" aura:id="containerManualSyncInfo">
+            <div class="slds-large-size--2-of-12">
+            </div>
+            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--1-of-6 slds-large-size--2-of-12">
+                <div class="slds-truncate" title="{!v.current.name}"><h3>{!v.current.name}</h3></div>
+            </div>
+            <div class="slds-p-horizontal--small slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--6-of-12">
+                <div class="slds-truncate" title="Status">
+                    <div class="progress" >
+                        <div class="progress-bar progress-bar-info"
+                             data-transitiongoal="0" aria-valuemin="0"
+                             aria-valuemax="100" role="progressbar"
+                             style="{!'width:'+v.total+'%;'}" aria-valuenow="0">{!v.totalToDisplay}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!!v.isRunning &amp;&amp; v.message != null}">
+        <div class="slds-box slds-large-size--1-of-2 slds-m-top--medium slds-align--absolute-center">
+            <div class="slds-notify_container slds-notify_container--inline">
+                <div class="{!'slds-notify slds-notify--alert slds-theme--alert-texture slds-banner '+(v.message=='Error'?'slds-theme--error':'')}" role="alert">
+                    <h2>{!v.message}</h2>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+
+
+
+</aura:component>

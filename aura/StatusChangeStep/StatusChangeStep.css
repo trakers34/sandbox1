@@ -1,0 +1,37 @@
+/**
+ * Created by guillaume.rebmann on 2/6/17.
+ */
+.THIS.review{
+    background-color:#c23934 !important;
+    color: rgb(255, 255, 255);
+}
+
+.THIS.draft{
+    background-color:#f6ba5d !important;
+
+}
+
+.THIS.draft:hover {
+    background-color:#db9b3b !important;
+}
+
+
+.THIS.draft > a{
+    color: rgb(255, 255, 255);
+}
+
+.THIS.firstCurrent:before {
+
+}
+
+.THIS.secondCurrent:before {
+    background-color:#c23934 !important;
+}
+
+.THIS.thirdCurrent:before {
+    background-color:#f6ba5d !important;
+}
+
+.THIS.thirdCurrent:before:hover {
+    background-color:#db9b3b !important;
+}

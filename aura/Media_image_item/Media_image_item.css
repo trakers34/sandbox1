@@ -1,0 +1,37 @@
+/**
+ * Created by guillaume.rebmann on 4/4/17.
+ */
+
+ /* TODO it's only for testing */
+
+.THIS .placeholder{
+    border:2px solid blue !important;
+}
+.THIS .loading{
+    border:2px solid orange !important;
+    transition: color 0.25s;
+}
+
+.THIS .loaded{
+    border:2px solid green !important;
+}
+
+.THIS .error{
+    border:2px solid red !important;
+}
+
+.THIS .image{
+    border:1px solid green;
+}
+
+.THIS .dropArea{
+    cursor:move !important;
+}
+
+.THIS .itemTitle{
+        -webkit-user-select: text;
+        -khtml-user-select: text;
+        -moz-user-select: text;
+        -o-user-select: text;
+        user-select: text;
+}

@@ -1,0 +1,47 @@
+/**
+ * Created by guillaume.rebmann on 3/7/17.
+ */
+
+        .THIS {
+            padding : 20px;
+        }
+
+        .THIS .imageContainer {
+            width : 180px;
+            margin-right : 10px;
+            margin-bottom:30px;
+        }
+        .THIS .imageContainerList{
+            display:-webkit-inline-box !important;
+            border-top:1px dashed rgb(216, 221, 230);
+            border-bottom:1px dashed rgb(216, 221, 230);
+            padding: 10px;
+
+        }
+
+        .THIS .imageContainer  figcaption {
+            position:relative !important;
+
+        }
+
+        .THIS .imageContainer  img {
+            position:relative !important;
+            transform:initial !important;
+            max-width:100% !important;
+            left:0% !important;
+            top:0% !important;
+        }
+
+        .THIS .imagesContainerLeft {
+            text-align:center;
+
+        }
+
+        .THIS .imagesContainerLeft article {
+            height:100%;
+        }
+
+        .THIS .imagesContainerRight{
+            margin-right:10px;
+            padding-right:20px;
+        }

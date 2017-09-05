@@ -1,0 +1,15 @@
+<!--
+ - Created by guillaume.rebmann on 2/6/17.
+ -->
+
+<aura:component description="StatusChangeStep" controller="StatusChangeController">
+    <aura:attribute name="stage"     type="StatusChangeController.Stage"></aura:attribute>
+    <aura:registerEvent name="statusChanged" type="c:StatusChangeStepEvent"/>
+
+    <li class="{!'slds-tabs--path__item '+v.stage.CssClass}" role="presentation">
+        <a class="slds-tabs--path__link" id="tabs-path-101" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" data-currentStatus="{!v.stage.currentObject.Mh_Status__c}" onclick="{!c.changeStatus}" aria-live="assertive">
+            <span class="slds-tabs--path__stage"> </span>
+            <span class="slds-tabs--path__title">{!v.stage.name}</span>
+        </a>
+    </li>
+</aura:component>

@@ -1,0 +1,175 @@
+<!--
+ - Created by guillaume.rebmann on 3/6/17.
+ -->
+
+<aura:component description="Media_editor" controller="ImageEditorController">
+    <!-- <ltng:require scripts="{!$Resource.Media_editor_static}" />-->
+
+    <style>
+
+
+
+        .slds-scope .slds-icon--mini{
+                width: 0.7rem;
+                height: 0.7rem;
+                line-height: 0.5;
+        }
+
+        .slds-scope .slds-icon-edit{
+            fill:rgb(0, 95, 178);
+        }
+
+        .slds-scope .slds-icon-delete{
+            fill:red !important;
+        }
+
+        .hidden {
+            display:none;
+        }
+
+        .overlay {
+            position: absolute;
+            margin: auto;
+            z-index: 999;
+            width: 300px;
+            height: 200px;
+            border: solid 2px rgba(222,60,80,.9);
+            box-sizing: content-box;
+            pointer-events: none;
+        }
+
+        .resize-handle{
+            position: absolute;
+            display: block;
+            width: 10px;
+            height: 10px;
+            background: rgba(222,60,80,.9);
+            z-index: 999;
+        }
+
+        .resize-handle-nw{
+            left: -5px;
+            top: -3px;
+            cursor: nw-resize;
+        }
+
+        .resize-handle-ne{
+            right: -5px;
+            top: -3px;
+            cursor: ne-resize;
+            float:right;
+        }
+
+        .resize-handle-sw{
+            left: -5px;
+            bottom: -3px;
+            cursor: sw-resize;
+        }
+
+        .resize-handle-se{
+            right: -5px;
+            bottom: -3px;
+            cursor: se-resize;
+            float:right;
+        }
+
+        .resize-container {
+			position: absolute;
+			display: inline-block;
+			cursor: move;
+			margin: 0 auto;
+		}
+
+        .resize-container:hover img,
+		.resize-container:active img {
+			outline: 2px dashed rgba(222,60,80,.9);
+			opacity: .9;
+		}
+    </style>
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+    <aura:handler name="Media_image_event" event="c:Media_image_event" action="{!c.handleEvent}" phase="capture" />
+    <aura:attribute name="collectionId" type="Id" default="a053E000001gsW2QAI"></aura:attribute>
+    <aura:attribute name="productIds" type="Id[]" ></aura:attribute>
+
+    <aura:attribute name="platform" type="String"></aura:attribute>
+    <aura:attribute name="platform_deindeal" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="platform_mystore" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="platform_mydeal" type="Boolean" default="false"></aura:attribute>
+
+
+    <lightning:tabset >
+        <aura:if isTrue="{!v.platform_deindeal}">
+            <lightning:tab label="Deindeal">
+                <aura:if isTrue="{!v.collectionId != null}">
+                    <c:Media_image_container Platform="deindeal" Title="Collection Images"  Description="List of images for the collection" Id="{!v.collectionId}"  Type="collection"></c:Media_image_container>
+                    <aura:iteration items="{!v.productIds}" var="obj">
+                        <c:Media_image_container Platform="deindeal" Title="Product Images" Description="List of images for the products"   Id="{!obj}"             Type="product"></c:Media_image_container>
+                    </aura:iteration>
+                </aura:if>
+            </lightning:tab>
+        </aura:if>
+        <aura:if isTrue="{!v.platform_mystore}">
+            <lightning:tab label="Mystore">
+                <aura:if isTrue="{!v.collectionId != null}">
+                    <c:Media_image_container Platform="mystore" Title="Collection Images"   Description="List of images for the collection" Id="{!v.collectionId}"  Type="collection"></c:Media_image_container>
+                    <aura:iteration items="{!v.productIds}" var="obj">
+                        <c:Media_image_container Platform="mystore" Title="Product Images"  Description="List of images for the products"   Id="{!obj}"             Type="product"></c:Media_image_container>
+                    </aura:iteration>
+                </aura:if>
+            </lightning:tab>
+        </aura:if>
+        <aura:if isTrue="{!v.platform_mydeal}">
+            <lightning:tab label="MyDeal">
+                <aura:if isTrue="{!v.collectionId != null}">
+                    <c:Media_image_container Platform="mydeal" Title="Collection Images"    Description="List of images for the collection" Id="{!v.collectionId}"  Type="collection"></c:Media_image_container>
+                    <aura:iteration items="{!v.productIds}" var="obj">
+                        <c:Media_image_container Platform="mydeal" Title="Product Images"   Description="List of images for the products"   Id="{!obj}"             Type="product"></c:Media_image_container>
+                    </aura:iteration>
+                </aura:if>
+            </lightning:tab>
+        </aura:if>
+
+
+
+    </lightning:tabset>
+
+
+
+
+
+
+
+
+    <div id="editorModal" class="hidden" aura:id="editorModal">
+        <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" >
+                <div class="slds-modal__header">
+                    <h2 id="header43" class="slds-text-heading--medium">Image Editor</h2>
+                </div>
+                <div class="slds-modal__content slds-p-around--large" style="overflow:hidden; height:600px;">
+                    <!-- Start Editor -->
+                    <div class="overlay"></div>
+                    <div class="resize-container" id="resizeContainerId" aura:id="resizeContainer" style="box-sizing:initial;"  onmousedown="{!c.mouseDown}" onmouseup="{!c.mouseUp}">
+                        <span class="resize-handle resize-handle-nw" ></span>
+                        <span class="resize-handle resize-handle-ne"></span>
+                        <!--<div aura:id="imgObj" style="width:200px;height:200px; background-color:green;"></div>-->
+                        <img id="imgObj" aura:id="imgObj" src="http://res.cloudinary.com/deindeal-ch/image/upload/v1483695593/sample/SecondaryCover.jpg" draggable="true" class="imagenToUpload" style="max-width:initial; height:inherit;"/>
+                        <span class="resize-handle resize-handle-sw"></span>
+                        <span class="resize-handle resize-handle-se"></span>
+                    </div>
+
+                    <!-- End Editor -->
+                </div>
+                <div class="slds-modal__footer">
+                    <button style="position:initial;" class="slds-button slds-button--neutral" onclick="{!c.cancel}">Cancel</button>
+                    <button style="position:initial;" class="slds-button slds-button--brand">Save</button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </div>
+
+
+</aura:component>
