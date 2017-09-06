@@ -7,6 +7,6 @@ global with sharing class AccountManager {
         String accountId = right.split('/')[0];
         // hello the world 1 2 4 5 6 7 8 9
         
-        return [SELECT Id,Name,(select id,name from contacts) FROM Account where Id =: accountId limit 1];
+        hello; //return [SELECT Id,Name,(select id,name from contacts) FROM Account where Id =: accountId limit 1];
     }
 }
