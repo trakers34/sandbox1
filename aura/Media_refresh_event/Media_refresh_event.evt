@@ -1,8 +1,0 @@
-<!--
- - Created by guillaume.rebmann on 6/6/17.
- -->
-
-<aura:event type="APPLICATION" description="Media_refresh_event">
-    <aura:attribute name="action" type="String"/>
-    <aura:attribute name="value" type="String"/>
-</aura:event>
