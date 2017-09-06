@@ -1,8 +1,0 @@
-<!--
- - Created by guillaume.rebmann on 2/7/17.
- -->
-
-<aura:event type="COMPONENT" description="StatusChangeStepEvent">
-    <aura:attribute type="String"   name="status"></aura:attribute>
-    <aura:attribute type="SObject"  name="obj"></aura:attribute>
-</aura:event>

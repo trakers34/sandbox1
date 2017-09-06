@@ -1,8 +1,0 @@
-<!--
- - Created by guillaume.rebmann on 3/7/17.
- -->
-
-<aura:event type="COMPONENT" description="Media_image_event">
-    <aura:attribute name="type" type="String"/>
-    <aura:attribute name="data" type="Object"/>
-</aura:event>
